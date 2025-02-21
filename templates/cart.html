@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | FurniCraft</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: 'Poppins', sans-serif; }
+        .cart-item:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .checkout-btn:hover { background: #2563eb; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Banner -->
+    <div class="bg-gray-800 text-white text-sm py-2 text-center">🚚 Free shipping on orders over ₹500</div>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between h-16 items-center px-4">
+            <div class="text-orange-600 font-bold text-xl">FurniCraft</div>
+            <a href="{% url 'cart' %}" class="text-gray-600 hover:text-orange-600">
+                <i class="fas fa-shopping-cart"></i> ({{ cart|length }})
+            </a>
+        </div>
+    </nav>
+
+    <!-- Cart Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Your Cart</h1>
+
+        <!-- Django Messages -->
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="px-4 py-3 rounded relative 
+                            {% if message.tags == 'error' %} bg-red-100 border border-red-400 text-red-700 
+                            {% elif message.tags == 'success' %} bg-green-100 border border-green-400 text-green-700 
+                            {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Cart Items -->
+            <div class="lg:col-span-2 space-y-6">
+                {% for item in cart %}
+                <div class="cart-item bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
+                    <div class="flex gap-4">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-32 h-32 rounded-lg object-cover">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800">{{ item.product.name }}</h2>
+                            <p class="text-gray-600">Qty: {{ item.quantity }} | Price: ₹{{ item.product.price }}</p>
+                            <p class="text-gray-600">Total Price: ₹{{ item.product_total|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'remove_from_cart' item.product.id %}" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash"></i> Remove
+                    </a>
+                </div>
+                {% empty %}
+                <p class="text-gray-600">Your cart is empty.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Order Summary -->
+            <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+                <h3 class="text-lg font-semibold mb-4">Price Details</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between"><span>Total Items</span><span>{{ cart|length }}</span></div>
+                    <div class="flex justify-between"><span>Total Price</span><span>₹{{ total_price|floatformat:2 }}</span></div>
+                </div>
+                <hr class="my-4">
+                <div class="flex justify-between font-semibold text-lg">
+                    <span>Total Amount</span><span>₹{{ total_price|floatformat:2 }}</span>
+                </div>
+                {% if cart %}
+                <a href="{% url 'add_delivery_address' %}" class="block mt-4">
+                    <button class="checkout-btn w-full px-4 py-2 bg-blue-500 text-white rounded-lg">Proceed to Checkout</button>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

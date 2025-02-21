@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .product-container { display: flex; align-items: center; padding: 50px; }
+        .product-image img { width: 400px; height: auto; border-radius: 10px; }
+        .product-details { margin-left: 40px; }
+        .price { font-size: 24px; font-weight: bold; }
+        .add-to-cart { background: black; color: white; padding: 10px 20px; border: none; }
+        .tags { display: flex; gap: 10px; margin-top: 15px; }
+        .tag { padding: 5px 10px; border-radius: 5px; background: #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="product-container">
+            <div class="product-image">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </div>
+            <div class="product-details">
+                <h1>{{ product.name }}</h1>
+                <p><strong>Inspired by:</strong> {{ product.description }}</p>
+                <p class="price">${{ product.price }}</p>
+                <button class="add-to-cart">ADD TO BOX - ${{ product.price }}</button>
+                <p>⭐⭐⭐⭐⭐ ({{ product.reviews_count }} reviews)</p>
+                <div class="tags">
+                    {% if product.gluten_free %} <span class="tag">Gluten-Free</span> {% endif %}
+                    {% if product.dairy_free %} <span class="tag">Dairy-Free</span> {% endif %}
+                    {% if product.plant_based %} <span class="tag">Plant-Based</span> {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
